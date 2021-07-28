@@ -20,7 +20,4 @@ setuptools.setup(
     ],
     python_requires='>=3.7',
     install_requires=['pyyaml', 'nni'],
-    entry_points={
-        'console_scripts': ['hconf=happy_config.cli:main']
-    }
 )
