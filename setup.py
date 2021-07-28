@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Yichen Xu",
     author_email="yichen.x@outlook.com",
-    description="Happy Experiment Configuation Management",
+    description="Managing ML experiment configuation with joy.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/GraphCL/happy_config",
