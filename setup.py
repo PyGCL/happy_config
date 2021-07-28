@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name="happy_config",
-    version="0.0.2",
+    version="0.0.3",
     author="Yichen Xu",
     author_email="yichen.x@outlook.com",
     description="Managing ML experiment configuation with joy.",
