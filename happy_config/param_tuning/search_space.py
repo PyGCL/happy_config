@@ -56,7 +56,10 @@ def extract_search_space(model: type) -> SearchSpace:
             if is_dataclass(t):
                 res = res + recur(t, path + [name])
             elif 'parameter_space' in meta:
-                res.parameters.update({f'{":".join(path)}:{name}': meta['parameter_space']})
+                if len(path) == 0:
+                    res.parameters.update({name: meta['parameter_space']})
+                else:
+                    res.parameters.update({f'{":".join(path)}:{name}': meta['parameter_space']})
 
         return res
 
