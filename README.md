@@ -1,2 +1,2 @@
-# happy_config
+# Happy Config
  Managing ML experiment configuration with joy.
