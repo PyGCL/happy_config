@@ -23,7 +23,7 @@ class Config:
 
 
 if __name__ == '__main__':
-    loader = ConfigLoader(model=Config, default_param_path='basic.json')
+    loader = ConfigLoader(model=Config, config='basic.json')
     print(show_type(loader.config_type))
     config = loader()
     print(config)

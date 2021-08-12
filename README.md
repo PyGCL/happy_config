@@ -42,7 +42,7 @@ Note the namespace syntax `bar:a` we use in JSON. It is also possible to write:
   "x": 1,
   "y": 1,
   "bar": {
-    "a": "1",
+    "a": "1"
   },
   "bar:b": "1"
 }
@@ -50,9 +50,9 @@ Note the namespace syntax `bar:a` we use in JSON. It is also possible to write:
  
 **Create a `ConfigLoader` instacen from the schema, and load the configuration**
 
-```
+```python
 from happy_config import ConfigLoader
-loader = ConfigLoader(model=Foo, default_param_path="config.json")
+loader = ConfigLoader(model=Foo, config="config.json")
 config: Foo = loader()  # Foo(x=1, y=1, bar=Bar(a="1", b="1"))
 ```
 

@@ -11,10 +11,10 @@ from happy_config.typechecking import *
 class ConfigLoader(object):
     T = TypeVar('T')
 
-    def __init__(self, model: T, default_param_path: str):
+    def __init__(self, model: T, config: str):
         self.config_type = from_python_type(model)
         self.config_raw_type = model
-        self.default_param_path = default_param_path
+        self.default_param_path = config
         self.arg_parser = self.construct_arg_parser()
 
     @staticmethod
