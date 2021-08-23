@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional, List
 from happy_config.typechecking.types import Type, StructuralType, PrimitiveType
 from happy_config.typechecking.typecheck_error import TypeCheckError, TypeMismatch, InvalidField, InvalidEnumValue
@@ -46,27 +47,3 @@ def check_type(x, tp: Type) -> Optional[TypeCheckError]:
         return tp.pmatch(check_struct, check_primitive)
 
     return recur(x, tp, path=[])
-
-
-if __name__ == '__main__':
-    from dataclasses import dataclass
-    from enum import Enum
-    from happy_config.typechecking.utils import from_python_type, extract_valid_paths
-    from happy_config.typechecking.types import show_type
-
-    class Loss(Enum):
-        InfoNCE = 'infonce'
-        Debiased = 'debiased_infonce'
-
-    @dataclass
-    class DebiasedInfoNCE:
-        tau: float
-        tau_plus: float = 10.0
-
-    @dataclass
-    class Config:
-        loss: Loss
-        debiased_infonce: DebiasedInfoNCE
-
-    config_tp = from_python_type(Config)
-    print(extract_valid_paths(config_tp))

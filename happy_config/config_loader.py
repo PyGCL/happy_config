@@ -11,11 +11,11 @@ from happy_config.typechecking import *
 class ConfigLoader(object):
     T = TypeVar('T')
 
-    def __init__(self, model: T, config: str):
+    def __init__(self, model: T, config: str, disable_argparse: bool = False):
         self.config_type = from_python_type(model)
         self.config_raw_type = model
-        self.default_param_path = config
-        self.arg_parser = self.construct_arg_parser()
+        self.config = config
+        self.arg_parser = self.construct_arg_parser() if not disable_argparse else None
 
     @staticmethod
     def _parse_yaml(path: str):
@@ -68,9 +68,12 @@ class ConfigLoader(object):
 
         return recur(data, self.config_raw_type)
 
-    def get_config(self) -> T:
-        args = self.arg_parser.parse_args()
-        config_path = args.config
+    def get_config(self, before_load: dict, after_load: dict, after_args: dict) -> T:
+        if self.arg_parser is not None:
+            args = self.arg_parser.parse_args()
+            config_path = args.config
+        else:
+            config_path = self.config
 
         def load_dict() -> dict:
             if config_path == 'nni':
@@ -85,9 +88,11 @@ class ConfigLoader(object):
             return loaded
 
         loaded = load_dict()
-        args_dict = args.__dict__
-        args_dict = {k: v for k, v in args_dict.items() if v is not None}
-        loaded = {**loaded, **args_dict}
+        loaded = {**before_load, **loaded, **after_load}
+        if self.arg_parser is not None:
+            args_dict = args.__dict__
+            args_dict = {k: v for k, v in args_dict.items() if v is not None}
+            loaded = {**loaded, **args_dict}
 
         if 'config' in loaded:
             loaded.pop('config')
@@ -100,13 +105,13 @@ class ConfigLoader(object):
 
         return self.construct_dataclass(loaded)
 
-    def __call__(self) -> T:
-        return self.get_config()
+    def __call__(self, before_load: dict = None, after_load: dict = None, after_args: dict = None) -> T:
+        return self.get_config(*[dict() if x is None else x for x in [before_load, after_load, after_args]])
 
     def construct_arg_parser(self) -> ArgumentParser:
         paths = extract_valid_paths(self.config_type)
         parser = ArgumentParser()
-        parser.add_argument('--config', type=str, default=self.default_param_path)
+        parser.add_argument('--config', type=str, default=self.config)
 
         for k, v in paths:
             parser.add_argument(f'--{k}', type=v, nargs='?')
